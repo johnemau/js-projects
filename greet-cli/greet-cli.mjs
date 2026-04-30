@@ -15,11 +15,16 @@ const TIMEZONE_ALIASES = {
 
 const timezoneTranslated = TIMEZONE_ALIASES[timezone] ?? timezone;
 const formattedTime = new Date().toLocaleString('en-US', { timeZone: timezoneTranslated, timeZoneName: 'short' });
-const localDate = new Date(formattedTime);
-const localHours = localDate.getHours();
-const isMorning = localHours < 12;
-const isAfernoon = localHours >= 12 && localHours < 17;
-const isEvening = localHours >= 17;
+const tzHour = Number(
+    new Intl.DateTimeFormat('en-US', {
+        timeZone: timezoneTranslated,
+        hour: 'numeric',
+        hour12: false,
+    }).format(new Date())
+);
+const isMorning = tzHour < 12;
+const isAfernoon = tzHour >= 12 && tzHour < 17;
+const isEvening = tzHour >= 17;
 
 const timedString = isMorning ? 'morning' : isAfernoon ? 'afternoon' : 'evening';
 const timedGreeting = `Good ${timedString}, ${name}. The time is ${formattedTime}`;
